@@ -1,5 +1,6 @@
 import React, {useState, useEffect} from "react";
 import { StyleSheet, StatusBar, SafeAreaView } from "react-native";
+
 import CurrentPrice from "./src/components/CurrentPrice";
 import HistoryGraphic from "./src/components/HistoryGraphic";
 import QuotationList from "./src/components/QuotationsList";
@@ -54,10 +55,15 @@ export default function App() {
   const [coinsGraphicList, setCoinsGraphicList] = useState([0]);
   const [days, setDays] = useState(30);
   const [updateData, setUpdateData] = useState(true);
+  const [price, setPrice] = useState()
 
   function updateDay(number){
     setDays(number);
     setUpdateData(true);
+  }
+
+  function priceCotation(){
+    setPrice(coinsGraphicList.pop())
   }
 
   useEffect(() =>{
@@ -67,6 +73,7 @@ export default function App() {
     getPriceCoinsGraphic(url(days)).then((dataG) =>{
       setCoinsGraphicList(dataG)
     });
+    priceCotation()
     if(updateData){
       setUpdateData(false)
     }
@@ -79,9 +86,9 @@ export default function App() {
       backgroundColor='#f50d41'
       barStyle="light-content"
       />
-      <CurrentPrice/>
-      <HistoryGraphic/>
-      <QuotationList/>
+      <CurrentPrice lastCotation={price}/>
+      <HistoryGraphic infoDataGraphics={coinsGraphicList}/>
+      <QuotationList filterDay={updateDay} listTransactions={coinsList}/>
     </SafeAreaView>
   );
 }
